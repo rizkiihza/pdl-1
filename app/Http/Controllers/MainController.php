@@ -11,7 +11,10 @@ class MainController extends Controller
         $query_pieces = explode(" ", $request->query('query'));
 
         if ($query_pieces[0] === "select") {
-            echo 1;
+            $table = $query_pieces[2]; 
+            $where = $query_pieces[3]; 
+            $result = $this->select($table, $where);
+            echo $result;
         }
 
         else if ($query_pieces[0] === "projection") {
@@ -61,5 +64,12 @@ class MainController extends Controller
         // cek conflict
         $tables = DB::select('SHOW TABLES');
         var_dump($tables);
+    }
+
+    private function select($table, $where) {
+        $result = DB::table($table)
+                ->whereRaw($where)
+                ->get();
+        return $result;
     }
 }
