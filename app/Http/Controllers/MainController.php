@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use DateTime;
 
 class MainController extends Controller
 {
@@ -39,6 +40,12 @@ class MainController extends Controller
         else if ($query_pieces[0] == "delete") {
             echo 5;
         }
+
+        else if ($query_pieces[0] == "timeslice") {
+            $table = $query_pieces[1];
+            $date = DateTime::createFromFormat('j-M-Y', $query_pieces[2]);
+            $this->timeslice($table, $date);
+        }
     }
 
     private function projection($column, $table) {
@@ -51,8 +58,8 @@ class MainController extends Controller
 
         else {
             $result = DB::table($table)->select($column, 'valid_start', 'valid_end')->get();
-            foreach ($result as $row) {
-                echo json_encode($row) . '<br>';
+            for ($idx = 0; $idx < count($result) - 1; $idx++) {
+                echo json_encode($result[$idx]) . '<br>';
             }
         }
     }
@@ -61,5 +68,16 @@ class MainController extends Controller
         // cek conflict
         $tables = DB::select('SHOW TABLES');
         var_dump($tables);
+    }
+
+    private function timeslice($table, $date) {
+        $result = DB::table($table)->
+            where('valid_start', '<=', $date)->
+            where('valid_end', '>=', $date)->
+            get();
+
+        foreach ($result as $row) {
+            echo json_encode($row) . '<br>';
+        }
     }
 }
