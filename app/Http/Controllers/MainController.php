@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\DB;
 
 class MainController extends Controller
 {
-    public function handleQuery($query_string) {
-        $query_pieces = explode(" ", $query_string);
+    public function handleQuery(Request $request) {
+        $query_pieces = explode(" ", $request->query('query'));
 
         if ($query_pieces[0] === "select") {
             echo 1;
