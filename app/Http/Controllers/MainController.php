@@ -67,8 +67,16 @@ class MainController extends Controller
     }
 
     private function select($table, $where) {
+        $where_clause = explode("&", $where);
+        $sql_where = "";
+        foreach ($where_clause as $condition) {
+            $sql_where = $sql_where.$condition." AND ";
+        }
+
+        $sql_where = substr($sql_where, 0, -5);
+
         $result = DB::table($table)
-                ->whereRaw($where)
+                ->whereRaw($sql_where)
                 ->get();
         return $result;
     }
