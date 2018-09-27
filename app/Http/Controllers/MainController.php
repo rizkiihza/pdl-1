@@ -87,7 +87,7 @@ class MainController extends Controller
                     $left = new DateTime(max($compressed_vs, $vs2));
                     $right = new DateTime(min($compressed_ve, $ve2));
                     $diff = $left->diff($right);
-                    if ($diff->d < 2) {
+                    if ($right > $left && $diff->d > -2) {
                         $compressed_vs = min($compressed_vs, $vs2);
                         $compressed_ve = max($compressed_ve, $ve2);
                     } else {
