@@ -12,8 +12,8 @@ class MainController extends Controller
         $query_pieces = explode(" ", $request->query('query'));
 
         if ($query_pieces[0] === "select") {
-            $table = $query_pieces[2]; 
-            $where = $query_pieces[3]; 
+            $table = $query_pieces[2];
+            $where = $query_pieces[3];
             $result = $this->select($table, $where);
             echo $result;
         }
@@ -30,7 +30,7 @@ class MainController extends Controller
         }
 
         else if ($query_pieces[0] === "join") {
-            echo 3;
+
         }
 
         else if ($query_pieces[0] === "insert") {
@@ -60,9 +60,47 @@ class MainController extends Controller
         }
 
         else {
-            $result = DB::table($table)->select($column, 'valid_start', 'valid_end')->get();
-            for ($idx = 0; $idx < count($result) - 1; $idx++) {
-                echo json_encode($result[$idx]) . '<br>';
+            $result = DB::table($table)->orderBy($column)->orderBy('valid_start')->select($column, 'valid_start', 'valid_end')->get();
+
+            $idx = 0;
+            $compressed_result = array();
+
+            foreach ($result as $row) {
+                echo json_encode($row) . '<br>';
+            }
+
+            echo '<br>';
+            echo '<br>';
+            while ($idx < count($result)) {
+                $col_data = $result[$idx]->$column;
+                $vs = $result[$idx]->valid_start;
+                $ve = $result[$idx]->valid_end;
+
+                $idx2 = $idx + 1;
+
+                $compressed_vs = $vs;
+                $compressed_ve = $ve;
+                while ($idx2 < count($result) && $result[$idx2]->$column === $result[$idx]->$column) {
+                    $vs2 = $result[$idx2]->valid_start;
+                    $ve2 = $result[$idx2]->valid_end;
+
+                    $left = new DateTime(max($compressed_vs, $vs2));
+                    $right = new DateTime(min($compressed_ve, $ve2));
+                    $diff = $left->diff($right);
+                    if ($diff->d < 2) {
+                        $compressed_vs = min($compressed_vs, $vs2);
+                        $compressed_ve = max($compressed_ve, $ve2);
+                    } else {
+                        break;
+                    }
+                    $idx2++;
+                }
+                array_push($compressed_result, array($column => $col_data, 'valid_start' => $compressed_vs, 'valid_end' => $compressed_ve));
+                $idx=$idx2;
+            }
+
+            foreach ($compressed_result as $row) {
+                echo json_encode($row) . '<br>';
             }
         }
     }
@@ -90,4 +128,5 @@ class MainController extends Controller
                 ->get();
         return $result;
     }
+
 }
