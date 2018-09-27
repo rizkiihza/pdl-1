@@ -30,7 +30,10 @@ class MainController extends Controller
         }
 
         else if ($query_pieces[0] === "insert") {
-            echo 4;
+            $table_name = $query_pieces[count($query_pieces)-1];
+            $value = $query_pieces[1];
+
+            var_dump($query_pieces);
         }
 
         else if ($query_pieces[0] == "delete") {
@@ -52,5 +55,11 @@ class MainController extends Controller
                 echo json_encode($row) . '<br>';
             }
         }
+    }
+
+    private function insert($value, $tables) {
+        // cek conflict
+        $tables = DB::select('SHOW TABLES');
+        var_dump($tables);
     }
 }
