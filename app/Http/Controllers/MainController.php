@@ -30,7 +30,10 @@ class MainController extends Controller
         }
 
         else if ($query_pieces[0] === "join") {
-            echo 3;
+            $first_table = $query_pieces[1]; 
+            $second_table = $query_pieces[2]; 
+            $result = $this->join($first_table, $second_table);
+            echo $result;
         }
 
         else if ($query_pieces[0] === "insert") {
@@ -85,17 +88,25 @@ class MainController extends Controller
     }
 
     private function select($table, $where) {
-        $where_clause = explode("&", $where);
-        $sql_where = "";
-        foreach ($where_clause as $condition) {
-            $sql_where = $sql_where.$condition." AND ";
-        }
-
-        $sql_where = substr($sql_where, 0, -5);
-
+        $sql_where = str_replace("&", " AND ", $where);
         $result = DB::table($table)
                 ->whereRaw($sql_where)
                 ->get();
+        return $result;
+    }
+
+    private function join($first_table, $second_table) {
+        $result = DB::table($first_table)
+            ->join($second_table, $first_table.".country", "=", $second_table.".country")
+            ->select($first_table.".name AS ".$first_table."_name", 
+                $second_table.".name AS ".$second_table."_name", 
+                $second_table.".country",
+                $first_table.".valid_start AS ".$first_table."_valid_start", 
+                $second_table.".valid_start AS ".$second_table."_valid_start", 
+                $first_table.".valid_end AS ".$first_table."_valid_end", 
+                $second_table.".valid_end AS ".$second_table."_valid_end")
+            ->get();
+
         return $result;
     }
 }
