@@ -12,8 +12,8 @@ class MainController extends Controller
         $query_pieces = explode(" ", $request->query('query'));
 
         if ($query_pieces[0] === "select") {
-            $table = $query_pieces[2]; 
-            $where = $query_pieces[3]; 
+            $table = $query_pieces[1]; 
+            $where = $query_pieces[2]; 
             $result = $this->select($table, $where);
             echo $result;
         }
