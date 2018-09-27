@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class PresidenSeeder extends Seeder
 {
@@ -11,10 +12,20 @@ class PresidenSeeder extends Seeder
      */
     public function run()
     {
-        B::table('presidens')->insert([
-            'name' => "soekarno",
-            'country' => "indonesia",
-            ''
+        DB::table('presidens')->insert([
+            'name' => "Soekarno",
+            'country' => "Indonesia",
+            'valid_start' => DateTime::createFromFormat('j-M-Y', '17-Aug-1945'),
+            'valid_end' => DateTime::createFromFormat('j-M-Y', '17-Mar-1967'),
         ]);
+
+        DB::table('presidens')->insert([
+            'name' => "Obama",
+            'country' => "USA",
+            'valid_start' => DateTime::createFromFormat('j-M-Y', '20-Jan-2009'),
+            'valid_end' => DateTime::createFromFormat('j-M-Y', '20-Jan-2017'),
+        ]);
+
+
     }
 }
