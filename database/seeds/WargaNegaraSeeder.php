@@ -19,6 +19,12 @@ class WargaNegaraSeeder extends Seeder
             'valid_end' => DateTime::createFromFormat('j-M-Y', '23-Jan-1950')
         ]);
         DB::table('warga_negaras')->insert([
+            'name' => 'Anton',
+            'country' => 'Indonesia',
+            'valid_start' => DateTime::createFromFormat('j-M-Y', '15-Sep-2045'),
+            'valid_end' => DateTime::createFromFormat('j-M-Y', '23-Jan-2050')
+        ]);
+        DB::table('warga_negaras')->insert([
             'name' => 'Toni',
             'country' => 'Indonesia',
             'valid_start' => DateTime::createFromFormat('j-M-Y', '20-Apr-1947'),
