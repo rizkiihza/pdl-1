@@ -115,8 +115,9 @@ class MainController extends Controller
 
                     $left = new DateTime(max($compressed_vs, $vs2));
                     $right = new DateTime(min($compressed_ve, $ve2));
-                    $diff = $left->diff($right);
-                    if ($right > $left && $diff->d > -2) {
+                    $interval =  $left->diff($right);
+                    $diff = $interval->format('%r%a');
+                    if ((int)$diff >= -1) {
                         $compressed_vs = min($compressed_vs, $vs2);
                         $compressed_ve = max($compressed_ve, $ve2);
                     } else {
