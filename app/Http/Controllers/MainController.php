@@ -8,6 +8,32 @@ use DateTime;
 
 class MainController extends Controller
 {
+
+    public function index(Request $request) {
+        $tables = DB::select('SHOW TABLES');
+        $table_data = [];
+        foreach($tables as $table) {
+            if ($table->Tables_in_homestead == 'migrations' || $table->Tables_in_homestead == 'password_resets' || $table->Tables_in_homestead == 'users')
+                continue;
+            
+            $rawdata = DB::table($table->Tables_in_homestead)->get();
+
+            // modify valid_start and valid_end column so its only show the date, ignore the hour
+            foreach ($rawdata as $idx => $rawdataitem) {
+                foreach ($rawdataitem as $key => $value) {
+                    if ($key == 'valid_start' || $key == 'valid_end') {
+                        $date = new DateTime($value);
+                        $value = $date->format('Y-m-d');
+                    }
+                    $rawdata[$idx]->$key = $value;
+                }
+            }
+            array_push($table_data, array('name'=>$table->Tables_in_homestead, 'data'=>$rawdata));
+        }
+
+        return view('welcome', ['table_data'=>$table_data]);
+    }
+
     public function handleQuery(Request $request) {
         $query_pieces = explode(" ", $request->query('query'));
 
@@ -108,10 +134,13 @@ class MainController extends Controller
         }
     }
 
-    private function insert($value, $tables) {
+    private function insert($value, $table) {
         // cek conflict
         $tables = DB::select('SHOW TABLES');
         var_dump($tables);
+        
+
+        // insert data
     }
 
     private function timeslice($table, $date) {

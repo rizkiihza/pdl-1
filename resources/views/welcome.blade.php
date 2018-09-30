@@ -63,30 +63,59 @@
                 margin-bottom: 30px;
             }
         </style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     </head>
     <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-                        <a href="{{ route('register') }}">Register</a>
-                    @endauth
-                </div>
-            @endif
 
-            <div class="content">
-                <div class="title m-b-md">
-                    Enter Query:
-                </div>
-                <form method="get" action="/query" >
-                    <textarea rows="5" cols="75" name="query"></textarea>
 
-                    <br/>
-                    <input type="submit" value="Search!">
-                </form>
+        <div class="container">
+
+            <div class="row center">
+                <h3>Valid-Time-based Temporal Database</h3>
+            </div>
+
+            <div class="row">
+                <div class="col s6 offset-s3">
+                    <p>Input your query:</p>
+                    <form method="get" action="/query" >
+                        <textarea rows="5" cols="75" name="query"></textarea>
+                        <br/>
+                        <input type="submit" value="Search!">
+                    </form>
+                </div>
+            </div>
+
+            <div class="row center">
+                <div class="col s6 offset-s3">
+                    <small>Please see <a href="#">here</a> to see our query syntax.</small>
+                </div>
+            </div>
+            
+            <br>
+            <br>
+            <hr>
+
+            <div class="row">
+                <p>Here are the available tables in the database:</p>
+                @foreach ($table_data as $table)
+                <div class="col s6">
+                    <h6>table name: {{ $table['name'] }}</h6>
+                    <table style="border: 1px solid black">
+                        <tr>
+                            @foreach ($table['data'][0] as $key => $value)
+                            <th>{{ $key }}</th>
+                            @endforeach
+                        </tr>
+                        @foreach ($table['data'] as $data)
+                        <tr>
+                            @foreach ($data as $key => $value)
+                            <td>{{ $value }}</td>
+                            @endforeach
+                        </tr>
+                        @endforeach
+                    </table>
+                </div>
+                @endforeach
             </div>
         </div>
     </body>
