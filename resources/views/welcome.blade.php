@@ -11,59 +11,8 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet" type="text/css">
 
         <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
+        <link rel="stylesheet" href="/css/materialize.css">
 
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     </head>
     <body>
 
@@ -80,14 +29,14 @@
                     <form method="get" action="/query" >
                         <textarea rows="5" cols="75" name="query"></textarea>
                         <br/>
-                        <input type="submit" value="Search!">
+                        <input type="submit" value="Process!">
                     </form>
                 </div>
             </div>
 
             <div class="row center">
                 <div class="col s6 offset-s3">
-                    <small>Please see <a href="#">here</a> to see our query syntax.</small>
+                    <small>Read <a href="/help">here</a> to see our query syntax. <br>Please use correct syntax here, we don't spend much effort to validate your query :')</small>
                 </div>
             </div>
             
@@ -99,7 +48,7 @@
                 <p>Here are the available tables in the database:</p>
                 @foreach ($table_data as $table)
                 <div class="col s6">
-                    <h6>table name: {{ $table['name'] }}</h6>
+                    <b>{{ $table['name'] }}</b>
                     <table style="border: 1px solid black">
                         <tr>
                             @foreach ($table['data'][0] as $key => $value)

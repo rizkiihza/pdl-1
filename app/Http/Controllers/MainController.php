@@ -22,8 +22,7 @@ class MainController extends Controller
             foreach ($rawdata as $idx => $rawdataitem) {
                 foreach ($rawdataitem as $key => $value) {
                     if ($key == 'valid_start' || $key == 'valid_end') {
-                        $date = new DateTime($value);
-                        $value = $date->format('Y-m-d');
+                        $value = $this->reformatDate($value);
                     }
                     $rawdata[$idx]->$key = $value;
                 }
@@ -35,7 +34,8 @@ class MainController extends Controller
     }
 
     public function handleQuery(Request $request) {
-        $query_pieces = explode(" ", $request->query('query'));
+        $raw_query = $request->query('query');
+        $query_pieces = explode(" ", $raw_query);
 
         if ($query_pieces[0] === "select") {
             $table = $query_pieces[1];
@@ -63,10 +63,13 @@ class MainController extends Controller
         }
 
         else if ($query_pieces[0] === "insert") {
-            $table_name = $query_pieces[count($query_pieces)-1];
-            $value = $query_pieces[1];
+            // example : insert (8, Joko Widodo, Indonesia, 2014-08-17, 2019-08-17) presidens
 
-            var_dump($query_pieces);
+            $table_name = $query_pieces[count($query_pieces)-1];
+            preg_match('#\((.*?)\)#', $raw_query, $inserted_value);
+            $value = $inserted_value[0];
+
+            $this->insert($value, $table_name);
         }
 
         else if ($query_pieces[0] == "delete") {
@@ -139,12 +142,45 @@ class MainController extends Controller
     }
 
     private function insert($value, $table) {
-        // cek conflict
-        $tables = DB::select('SHOW TABLES');
-        var_dump($tables);
+        $raw_value = substr($value, 1, strlen($value)-2);
         
+        // get all the attribute from table
+        $inserted_value = explode(',', $raw_value);
+        $idx = 0; $where_array = [];
+        $first_item = DB::table($table)->first();
+        foreach($first_item as $key=>$value) {
+            $first_item->$key = $inserted_value[$idx];
+            if($key != 'id' && $key != 'valid_start' && $key != 'valid_end')
+                $where_array[$key] = trim($inserted_value[$idx]);
+            $idx++;
+        }
+        $inserted_value = (array) $first_item;
 
-        // insert data
+        // prepare where statement
+        $where_array_text = ''; $idx = 0;
+        foreach ($where_array as $i => $x) {
+            if ($idx != 0)
+                $where_array_text .= ' and ';
+            $where_array_text .= $i.' = "'.$x.'"';
+            $idx++;
+        }
+
+        // detect conflict value
+        $valid_start = $inserted_value['valid_start'];
+        $valid_end = $inserted_value['valid_end'];
+        $conflicted_value = DB::table($table)
+            ->select("id")
+            ->whereRaw($where_array_text)
+            ->whereRaw("((valid_start BETWEEN '$valid_start' AND '$valid_end') OR (valid_end BETWEEN '$valid_start' AND '$valid_end'))")
+            ->count();
+        if ($conflicted_value > 0) {
+            echo "Error: Duplicate item with overlapping valid time!";
+            return;
+        }
+
+        // insert value
+        $success = DB::table($table)->insert($inserted_value);
+        echo "Success: new item inserted to $table";
     }
 
     private function delete($table, $where){
@@ -187,5 +223,14 @@ class MainController extends Controller
             ->get();
 
         return $result;
+    }
+
+
+    // helper function
+    private function reformatDate($raw_date) {
+        $date = new DateTime($raw_date);
+        $simple_date = $date->format('Y-m-d');
+
+        return $simple_date;
     }
 }
