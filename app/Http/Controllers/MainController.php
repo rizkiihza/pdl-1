@@ -70,7 +70,10 @@ class MainController extends Controller
         }
 
         else if ($query_pieces[0] == "delete") {
-            echo 5;
+            $table = $query_pieces[1];
+            $where = $query_pieces[2];
+            $result = $this->delete($table, $where);
+            echo $result;
         }
 
         else if ($query_pieces[0] == "timeslice") {
@@ -142,6 +145,14 @@ class MainController extends Controller
         
 
         // insert data
+    }
+
+    private function delete($table, $where){
+        $sql_where = str_replace("&", " AND ", $where);
+        $result = DB::table($table)
+                ->whereRaw($sql_where)
+                ->update(['is_deleted' => 1]);
+        return $result;
     }
 
     private function timeslice($table, $date) {
