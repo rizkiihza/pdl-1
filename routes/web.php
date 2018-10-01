@@ -14,3 +14,7 @@
 Route::get('/', 'MainController@index');
 
 Route::get('/query', 'MainController@handleQuery');
+
+Route::get('/help', function() {
+    return view('help');
+});
