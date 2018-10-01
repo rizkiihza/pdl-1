@@ -80,14 +80,14 @@
                     <form method="get" action="/query" >
                         <textarea rows="5" cols="75" name="query"></textarea>
                         <br/>
-                        <input type="submit" value="Search!">
+                        <input type="submit" value="Process!">
                     </form>
                 </div>
             </div>
 
             <div class="row center">
                 <div class="col s6 offset-s3">
-                    <small>Please see <a href="#">here</a> to see our query syntax.</small>
+                    <small>Read <a href="#">here</a> to see our query syntax. <br>Please use correct syntax here, we don't spend much effort to validate your query :')</small>
                 </div>
             </div>
             
