@@ -41,6 +41,11 @@
                 example: select presidens country='Indonesia'&name='Soekarno'</p>
                 <br>
 
+                <h6>Join</h6>
+                <p>join [first_table] [second_table]<br>
+                example: join presidens warga_negaras</p>
+                <br>
+
             </div>
         </div>
 
