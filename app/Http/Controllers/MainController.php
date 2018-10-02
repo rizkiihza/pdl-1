@@ -57,8 +57,7 @@ class MainController extends Controller
         else if ($query_pieces[0] === "join") {
             $first_table = $query_pieces[1];
             $second_table = $query_pieces[2];
-            $result = $this->join($first_table, $second_table);
-            echo $result;
+            $this->join($first_table, $second_table);
         }
 
         else if ($query_pieces[0] === "insert") {
@@ -212,18 +211,54 @@ class MainController extends Controller
     }
 
     private function join($first_table, $second_table) {
+        $firstTableName = $first_table."_name";
+        $secondTableName = $second_table."_name";
+        $firstTableValidStart = $first_table."_valid_start";
+        $secondTableValidStart = $second_table."_valid_start";
+        $firstTableValidEnd = $first_table."_valid_end";
+        $secondTableValidEnd = $second_table."_valid_end";
+
         $result = DB::table($first_table)
             ->join($second_table, $first_table.".country", "=", $second_table.".country")
-            ->select($first_table.".name AS ".$first_table."_name", 
-                $second_table.".name AS ".$second_table."_name", 
+            ->select($first_table.".name AS ".$firstTableName, 
+                $second_table.".name AS ".$secondTableName, 
                 $second_table.".country",
-                $first_table.".valid_start AS ".$first_table."_valid_start", 
-                $second_table.".valid_start AS ".$second_table."_valid_start", 
-                $first_table.".valid_end AS ".$first_table."_valid_end", 
-                $second_table.".valid_end AS ".$second_table."_valid_end")
+                $first_table.".valid_start AS ".$firstTableValidStart, 
+                $second_table.".valid_start AS ".$secondTableValidStart, 
+                $first_table.".valid_end AS ".$firstTableValidEnd, 
+                $second_table.".valid_end AS ".$secondTableValidEnd)
             ->get();
 
-        return $result;
+        foreach ($result as $row) {
+            $joinValidStart = date($row->$firstTableValidStart) > date($row->$secondTableValidStart) ?
+                $row->$firstTableValidStart : $row->$secondTableValidStart;
+            $joinValidEnd = date($row->$firstTableValidEnd) < date($row->$secondTableValidEnd) ?
+                $row->$firstTableValidEnd : $row->$secondTableValidEnd;
+            // delete unusable columns
+            unset($row->$firstTableValidStart);
+            unset($row->$secondTableValidStart);
+            unset($row->$firstTableValidEnd);
+            unset($row->$secondTableValidEnd);
+            // final check
+            if ($joinValidStart < $joinValidEnd) {
+                $row->validStart = $joinValidStart;
+                $row->validEnd = $joinValidEnd;
+            } else {
+                $row->validStart = False;
+                $row->validEnd = False;
+            }
+        }
+
+        $mergedResult = array();
+        foreach ($result as $row) {
+            if ($row->validStart && $row->validEnd) {
+                array_push($mergedResult, $row);
+            }
+        }
+
+        foreach ($mergedResult as $row) {
+            echo json_encode($row) . '<br>';
+        }
     }
 
 
