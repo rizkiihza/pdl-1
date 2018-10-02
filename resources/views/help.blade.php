@@ -36,6 +36,11 @@
                 example: insert (8, Joko Widodo, Indonesia, 2014-08-17, 2019-08-17) presidens</p>
                 <br>
 
+                <h6>Select</h6>
+                <p>select [table] [where]<br>
+                example: select presidens country='Indonesia'&name='Soekarno'</p>
+                <br>
+
             </div>
         </div>
 

@@ -40,8 +40,7 @@ class MainController extends Controller
         if ($query_pieces[0] === "select") {
             $table = $query_pieces[1];
             $where = $query_pieces[2];
-            $result = $this->select($table, $where);
-            echo $result;
+            $this->select($table, $where);
         }
 
         else if ($query_pieces[0] === "projection") {
@@ -207,7 +206,9 @@ class MainController extends Controller
         $result = DB::table($table)
                 ->whereRaw($sql_where)
                 ->get();
-        return $result;
+        foreach ($result as $row) {
+            echo json_encode($row) . '<br>';
+        }
     }
 
     private function join($first_table, $second_table) {
