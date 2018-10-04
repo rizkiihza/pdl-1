@@ -80,7 +80,7 @@ class MainController extends Controller
             $result = Algebra::join($first_table, $second_table);
             foreach ($result as $idx => $rawdataitem) {
                 foreach ($rawdataitem as $key => $value) {
-                    if ($key == 'valid_start' || $key == 'valid_end') {
+                    if ($key == 'validStart' || $key == 'validEnd') {
                         $value = Algebra::reformatDate($value);
                     }
                     $result[$idx]->$key = $value;
