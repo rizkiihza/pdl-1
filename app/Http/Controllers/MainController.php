@@ -95,7 +95,7 @@ class MainController extends Controller
             $result = Algebra::setDifference($first_table, $second_table);
             foreach ($result as $idx => $rawdataitem) {
                 foreach ($rawdataitem as $key => $value) {
-                    if ($key == 'validStart' || $key == 'validEnd') {
+                    if ($key == 'valid_start' || $key == 'valid_end') {
                         $value = Algebra::reformatDate($value);
                     }
                     $result[$idx]->$key = $value;
