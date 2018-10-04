@@ -8,9 +8,7 @@
             public static function projection($column, $table) {
                 if ($column == "*") {
                     $result = DB::table($table)->get();
-                    foreach ($result as $row) {
-                        echo json_encode($row) . '<br>';
-                    }
+                    return $result;
                 }
 
                 else {
@@ -18,13 +16,6 @@
 
                     $idx = 0;
                     $compressed_result = array();
-
-                    foreach ($result as $row) {
-                        echo json_encode($row) . '<br>';
-                    }
-
-                    echo '<br>';
-                    echo '<br>';
                     while ($idx < count($result)) {
                         $col_data = $result[$idx]->$column;
                         $vs = $result[$idx]->valid_start;
@@ -54,9 +45,7 @@
                         $idx=$idx2;
                     }
 
-                    foreach ($compressed_result as $row) {
-                        echo json_encode($row) . '<br>';
-                    }
+                    return $compressed_result;
                 }
             }
 
@@ -140,12 +129,12 @@
 
                 $result = DB::table($first_table)
                     ->join($second_table, $first_table.".country", "=", $second_table.".country")
-                    ->select($first_table.".name AS ".$firstTableName, 
-                        $second_table.".name AS ".$secondTableName, 
+                    ->select($first_table.".name AS ".$firstTableName,
+                        $second_table.".name AS ".$secondTableName,
                         $second_table.".country",
-                        $first_table.".valid_start AS ".$firstTableValidStart, 
-                        $second_table.".valid_start AS ".$secondTableValidStart, 
-                        $first_table.".valid_end AS ".$firstTableValidEnd, 
+                        $first_table.".valid_start AS ".$firstTableValidStart,
+                        $second_table.".valid_start AS ".$secondTableValidStart,
+                        $first_table.".valid_end AS ".$firstTableValidEnd,
                         $second_table.".valid_end AS ".$secondTableValidEnd)
                     ->get();
 
@@ -181,6 +170,19 @@
                 }
             }
 
+
+            public static function union($column, $table1, $table2) {
+                $table_1 = $this->projection($table1, $column);
+                $table_2 = $this->projection($table, $column);
+
+                foreach($table_1 as $row) {
+                    echo $row . '<br>';
+                }
+                echo '<br><br>';
+                foreach($table_2 as $row) {
+                    echo $row . '<br>';
+                }
+            }
 
             // helper function
             public static function reformatDate($raw_date) {
