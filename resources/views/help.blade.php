@@ -26,6 +26,8 @@
                 <p>To access our database, please use this query language</p>
                 <br>
 
+                <h5>Temporal Relational Algebra</h5>
+
                 <h6>Projection</h6>
                 <p>projection [column] [table] <br>
                 example: projection name warga_negaras</p>
@@ -44,6 +46,88 @@
                 <h6>Join</h6>
                 <p>join [first_table] [second_table]<br>
                 example: join presidens warga_negaras</p>
+                <br>
+
+                <h6>Delete</h6>
+                <p>delete [table] [where_statement]<br>
+                example: delete presidens name='Sukarno'&country='Indonesia'</p>
+                <br>
+
+                <h6>Valid Timeslice</h6>
+                <p>timeslice [table] [DD-MMM-YYYY]<br>
+                example: timeslice presidens 20-Aug-1945</p>
+                <br>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s6 offset-s3">
+                <h5>Allen's Time Interval</h5>
+
+                <h6>After</h6>
+                <p>is after [table] [idx1] [idx2]<br>
+                example: is after presidens 1 2</p>
+                <br>
+
+                <h6>Before</h6>
+                <p>is before [table] [idx1] [idx2]<br>
+                example: is before presidens 1 2</p>
+                <br>
+
+                <h6>Meet</h6>
+                <p>is meet [table] [idx1] [idx2]<br>
+                example: is before presidens 1 2</p>
+                <br>
+
+                <h6>Met By</h6>
+                <p>is metBy [table] [idx1] [idx2]<br>
+                example: is before presidens 1 2</p>
+                <br>
+
+                <h6>Overlap</h6>
+                <p>is overlap [table] [idx1] [idx2]<br>
+                example: is before presidens 1 2</p>
+                <br>
+
+                <h6>Overlapped By</h6>
+                <p>is overlappedBy [table] [idx1] [idx2]<br>
+                example: is before presidens 1 2</p>
+                <br>
+
+                <h6>Start</h6>
+                <p>is start [table] [idx1] [idx2]<br>
+                example: is before presidens 1 2</p>
+                <br>
+
+                <h6>Started By</h6>
+                <p>is startedBy [table] [idx1] [idx2]<br>
+                example: is before presidens 1 2</p>
+                <br>
+
+                <h6>During</h6>
+                <p>is during [table] [idx1] [idx2]<br>
+                example: is before presidens 1 2</p>
+                <br>
+
+                <h6>Contain</h6>
+                <p>is contain [table] [idx1] [idx2]<br>
+                example: is before presidens 1 2</p>
+                <br>
+
+                <h6>Finish</h6>
+                <p>is finish [table] [idx1] [idx2]<br>
+                example: is before presidens 1 2</p>
+                <br>
+
+                <h6>Finished By</h6>
+                <p>is finishedBy [table] [idx1] [idx2]<br>
+                example: is before presidens 1 2</p>
+                <br>
+
+                <h6>Equal</h6>
+                <p>is equal [table] [idx1] [idx2]<br>
+                example: is before presidens 1 2</p>
                 <br>
 
             </div>
