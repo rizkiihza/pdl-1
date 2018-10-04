@@ -43,6 +43,14 @@ class MainController extends Controller
             $table = $query_pieces[1];
             $where = $query_pieces[2];
             $result = Algebra::select($table, $where);
+            foreach ($result as $idx => $rawdataitem) {
+                foreach ($rawdataitem as $key => $value) {
+                    if ($key == 'valid_start' || $key == 'valid_end') {
+                        $value = Algebra::reformatDate($value);
+                    }
+                    $result[$idx]->$key = $value;
+                }
+            }
             $this->makeTable($result);
         }
 
@@ -55,6 +63,14 @@ class MainController extends Controller
             $table = $query_pieces[2];
 
             $result = Algebra::projection($columns, $table);
+            foreach ($result as $idx => $rawdataitem) {
+                foreach ($rawdataitem as $key => $value) {
+                    if ($key == 'valid_start' || $key == 'valid_end') {
+                        $value = Algebra::reformatDate($value);
+                    }
+                    $result[$idx][$key] = $value;
+                }
+            }
             $this->makeTable($result);
         }
 
@@ -62,6 +78,14 @@ class MainController extends Controller
             $first_table = $query_pieces[1];
             $second_table = $query_pieces[2];
             $result = Algebra::join($first_table, $second_table);
+            foreach ($result as $idx => $rawdataitem) {
+                foreach ($rawdataitem as $key => $value) {
+                    if ($key == 'valid_start' || $key == 'valid_end') {
+                        $value = Algebra::reformatDate($value);
+                    }
+                    $result[$idx]->$key = $value;
+                }
+            }
             $this->makeTable($result);
         }
 
@@ -85,6 +109,14 @@ class MainController extends Controller
             $table = $query_pieces[1];
             $date = DateTime::createFromFormat('j-M-Y', $query_pieces[2]);
             $result = Algebra::timeslice($table, $date);
+            foreach ($result as $idx => $rawdataitem) {
+                foreach ($rawdataitem as $key => $value) {
+                    if ($key == 'valid_start' || $key == 'valid_end') {
+                        $value = Algebra::reformatDate($value);
+                    }
+                    $result[$idx]->$key = $value;
+                }
+            }
             $this->makeTable($result);
         }
 
@@ -112,7 +144,7 @@ class MainController extends Controller
             echo '<tr>';
             $first_row = $result[0];
             foreach($first_row as $key => $value) {
-                echo '<th style="border:1px solid black; border-collapse: collapse">';
+                echo '<th align="left"; style="padding:5px; border:1px solid black; border-collapse: collapse">';
                 echo $key;
                 echo '</th>';
             }
@@ -120,7 +152,7 @@ class MainController extends Controller
             foreach($result as $row){
                 echo '<tr>';
                 foreach ($row as $col){
-                    echo '<td style="border:1px solid black; border-collapse: collapse">';
+                    echo '<td style="padding:5px; border:1px solid black; border-collapse: collapse">';
                     echo $col;
                     echo '</td>';
                 }
