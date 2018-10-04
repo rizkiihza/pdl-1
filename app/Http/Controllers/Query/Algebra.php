@@ -51,7 +51,6 @@
 
             public static function insert($value, $table) {
                 $raw_value = substr($value, 1, strlen($value)-2);
-                
                 $inserted_value = explode(',', $raw_value);
 
                 // check inserted valid time
@@ -180,15 +179,12 @@
 
 
             public static function union($column, $table1, $table2) {
-                $table_1 = $this->projection($table1, $column);
-                $table_2 = $this->projection($table, $column);
+                $table_1 = Algebra::projection($column, $table1);
+                $table_2 = Algebra::projection($column, $table2);
 
-                foreach($table_1 as $row) {
-                    echo $row . '<br>';
-                }
-                echo '<br><br>';
-                foreach($table_2 as $row) {
-                    echo $row . '<br>';
+                $total_result = array_merge($table_1, $table_2);
+                foreach($total_result as $row) {
+                    echo json_encode($row) . '<br>';
                 }
             }
 

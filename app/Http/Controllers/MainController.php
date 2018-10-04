@@ -85,6 +85,13 @@ class MainController extends Controller
             Algebra::timeslice($table, $date);
         }
 
+        else if ($query_pieces[0] == "union") {
+            $column = $query_pieces[1];
+            $table_1 = $query_pieces[2];
+            $table_2 = $query_pieces[3];
+            Algebra::union($column, $table_1, $table_2);
+        }
+
         else if ($query_pieces[0] == "is") {
             $allen = $query_pieces[1];
             $table = $query_pieces[2];
