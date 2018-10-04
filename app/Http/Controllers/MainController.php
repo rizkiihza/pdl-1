@@ -135,6 +135,22 @@ class MainController extends Controller
             $this->makeTable($result);
         }
 
+        else if ($query_pieces[0] == "union") {
+            $column = $query_pieces[1];
+            $table_1 = $query_pieces[2];
+            $table_2 = $query_pieces[3];
+            $result = Algebra::union($column, $table_1, $table_2);
+            foreach ($result as $idx => $rawdataitem) {
+                foreach ($rawdataitem as $key => $value) {
+                    if ($key == 'valid_start' || $key == 'valid_end') {
+                        $value = Algebra::reformatDate($value);
+                    }
+                    $result[$idx][$key] = $value;
+                }
+            }
+            $this->makeTable($result);
+        }
+
         else if ($query_pieces[0] == "is") {
             $allen = $query_pieces[1];
             $table = $query_pieces[2];
