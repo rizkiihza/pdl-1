@@ -42,7 +42,8 @@ class MainController extends Controller
         if ($query_pieces[0] === "select") {
             $table = $query_pieces[1];
             $where = $query_pieces[2];
-            Algebra::select($table, $where);
+            $result = Algebra::select($table, $where);
+            $this->makeTable($result);
         }
 
         else if ($query_pieces[0] === "projection") {
@@ -53,13 +54,15 @@ class MainController extends Controller
             $columns = $query_pieces[1];
             $table = $query_pieces[2];
 
-            Algebra::projection($columns, $table);
+            $result = Algebra::projection($columns, $table);
+            $this->makeTable($result);
         }
 
         else if ($query_pieces[0] === "join") {
             $first_table = $query_pieces[1];
             $second_table = $query_pieces[2];
-            Algebra::join($first_table, $second_table);
+            $result = Algebra::join($first_table, $second_table);
+            $this->makeTable($result);
         }
 
         else if ($query_pieces[0] === "insert") {
@@ -75,14 +78,14 @@ class MainController extends Controller
         else if ($query_pieces[0] == "delete") {
             $table = $query_pieces[1];
             $where = $query_pieces[2];
-            $result = Algebra::delete($table, $where);
-            echo $result;
+            Algebra::delete($table, $where);
         }
 
         else if ($query_pieces[0] == "timeslice") {
             $table = $query_pieces[1];
             $date = DateTime::createFromFormat('j-M-Y', $query_pieces[2]);
-            Algebra::timeslice($table, $date);
+            $result = Algebra::timeslice($table, $date);
+            $this->makeTable($result);
         }
 
         else if ($query_pieces[0] == "is") {
@@ -100,4 +103,30 @@ class MainController extends Controller
         }
     }
 
+    private function makeTable($result) {
+        if (count($result) == 0) {
+            echo "Empty result";
+        }
+        else {
+            echo '<table align="center"; style="border:1px solid black; border-collapse: collapse">';
+            echo '<tr>';
+            $first_row = $result[0];
+            foreach($first_row as $key => $value) {
+                echo '<th style="border:1px solid black; border-collapse: collapse">';
+                echo $key;
+                echo '</th>';
+            }
+            echo '</tr>';
+            foreach($result as $row){
+                echo '<tr>';
+                foreach ($row as $col){
+                    echo '<td style="border:1px solid black; border-collapse: collapse">';
+                    echo $col;
+                    echo '</td>';
+                }
+                echo '</tr>';
+            }
+            echo '</table>';
+        }
+    }
 }
