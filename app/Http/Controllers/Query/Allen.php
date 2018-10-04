@@ -10,14 +10,14 @@
             $first_row = DB::table($table)->where('id','=', $idx1)->first();
             $second_row = DB::table($table)->where('id', '=', $idx2)->first();
 
-            return ($first_row->valid_end < $second_row->valid_start) ? TRUE : FALSE;
+            return ($first_row->valid_end <= $second_row->valid_start) ? TRUE : FALSE;
         }
 
         public static function after($table, $idx1, $idx2) {
             $first_row = DB::table($table)->where('id','=', $idx1)->first();
             $second_row = DB::table($table)->where('id', '=', $idx2)->first();
 
-            return ($first_row->valid_start > $second_row->valid_end) ? TRUE : FALSE;
+            return ($first_row->valid_start >= $second_row->valid_end) ? TRUE : FALSE;
         }
 
         public static function meet($table, $idx1, $idx2) {
