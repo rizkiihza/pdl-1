@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Query\Allen;
 use DateTime;
 
 class MainController extends Controller
@@ -15,7 +16,7 @@ class MainController extends Controller
         foreach($tables as $table) {
             if ($table->Tables_in_homestead == 'migrations' || $table->Tables_in_homestead == 'password_resets' || $table->Tables_in_homestead == 'users')
                 continue;
-            
+
             $rawdata = DB::table($table->Tables_in_homestead)->get();
 
             // modify valid_start and valid_end column so its only show the date, ignore the hour
@@ -82,6 +83,18 @@ class MainController extends Controller
             $date = DateTime::createFromFormat('j-M-Y', $query_pieces[2]);
             $this->timeslice($table, $date);
         }
+
+        else if ($query_pieces[0] == "is") {
+            $allen = $query_pieces[1];
+            $table = $query_pieces[2];
+            $id1 = $query_pieces[3];
+            $id2 = $query_pieces[4];
+
+            if ($allen == "before") {
+                $result = Allen::before($table, $id1, $id2);
+                echo "\n\n"  .  $result;
+            }
+        }
     }
 
     private function projection($column, $table) {
@@ -141,7 +154,6 @@ class MainController extends Controller
 
     private function insert($value, $table) {
         $raw_value = substr($value, 1, strlen($value)-2);
-        
         // get all the attribute from table
         $inserted_value = explode(',', $raw_value);
         $idx = 0; $where_array = [];
