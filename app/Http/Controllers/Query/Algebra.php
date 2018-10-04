@@ -111,7 +111,7 @@
                     where('valid_start', '<=', $date)->
                     where('valid_end', '>=', $date)->
                     get();
-                
+
                 return $result;
                 // foreach ($result as $row) {
                 //     echo json_encode($row) . '<br>';
@@ -183,13 +183,78 @@
 
 
             public static function union($column, $table1, $table2) {
-                $table_1 = Algebra::projection($column, $table1);
-                $table_2 = Algebra::projection($column, $table2);
-
-                $total_result = array_merge($table_1, $table_2);
-                foreach($total_result as $row) {
-                    echo json_encode($row) . '<br>';
+                $all = FALSE;
+                if ($column == '*') {
+                    $table_1 = DB::table($table1)->get();
+                    $table_2 = DB::table($table2)->get();
+                    $all = TRUE;
                 }
+                else {
+                    $table_1 = Algebra::projection($column, $table1);
+                    $table_2 = Algebra::projection($column, $table2);
+                }
+
+                $total_result = array_fill(0, count($table_1), NULL);
+                $used = array_fill(0, count($table_2), FALSE);
+
+                foreach ($table_1 as $key1 => $row1) {
+                    if ($all == FALSE) {
+                        $total_result[$key1] = $row1;
+                    } else {
+                        $total_result[$key1] = array('name' => $row1->name, 'country' => $row1->country,
+                                                            'valid_start' => $row1->valid_start, 'valid_end' => $row1->valid_end);
+                    }
+                    foreach ($table_2 as $key2 => $row2) {
+                        if ($all == FALSE && $row1[$column] == $row2[$column] && $used[$key2] == FALSE) {
+                            $vs1 = $row1['valid_start'];
+                            $ve1 = $row1['valid_end'];
+
+                            $vs2 = $row2['valid_start'];
+                            $ve2 = $row2['valid_end'];
+
+                            $left = new DateTime(max($vs1, $vs2));
+                            $right = new DateTime(min($ve1, $ve2));
+                            $interval =  $left->diff($right);
+                            $diff = $interval->format('%r%a');
+                            if ((int)$diff >= -1) {
+                                $total_result[$key1] = array($column => $row1[$column],
+                                                            'valid_start' => min($vs1, $vs2), 'valid_end' => max($ve1, $ve2));
+                                $used[$key2] = TRUE;
+                            }
+                        }
+                        else if($all == TRUE && $row1->name == $row2->name && $row1->country == $row2->country && $used[$key2] == FALSE) {
+                            $vs1 = $row1->valid_start;
+                            $ve1 = $row1->valid_end;
+
+                            $vs2 = $row2->valid_start;
+                            $ve2 = $row2->valid_end;
+
+                            $left = new DateTime(max($vs1, $vs2));
+                            $right = new DateTime(min($ve1, $ve2));
+                            $interval =  $left->diff($right);
+                            $diff = $interval->format('%r%a');
+                            if ((int)$diff >= -1) {
+                                $total_result[$key1] = array('name' => $row1->name, 'country' => $row1->country,
+                                                            'valid_start' => min($vs1, $vs2), 'valid_end' => max($ve1, $ve2));
+                                $used[$key2] = TRUE;
+                            }
+                        }
+                    }
+                }
+                foreach ($table_2 as $key2 => $row2) {
+                    if ($all) {
+                        if ($used[$key2] == FALSE) {
+                            array_push($total_result, array('name' => $row2->name, 'country' => $row2->country,
+                                                        'valid_start' => $row2->valid_start, 'valid_end' => $row2->valid_end));
+                        }
+                    } else {
+                        if ($used[$key2] == FALSE) {
+                            array_push($total_result, $row2);
+                        }
+                    }
+                }
+
+                return $total_result;
             }
 
             // helper function
