@@ -102,6 +102,7 @@
                 $result = DB::table($table)
                         ->whereRaw($sql_where)
                         ->update(['is_deleted' => 1]);
+                echo "Success : item deleted";
                 return $result;
             }
 
@@ -110,10 +111,11 @@
                     where('valid_start', '<=', $date)->
                     where('valid_end', '>=', $date)->
                     get();
-
-                foreach ($result as $row) {
-                    echo json_encode($row) . '<br>';
-                }
+                
+                return $result;
+                // foreach ($result as $row) {
+                //     echo json_encode($row) . '<br>';
+                // }
             }
 
             public static function select($table, $where) {
@@ -121,9 +123,10 @@
                 $result = DB::table($table)
                         ->whereRaw($sql_where)
                         ->get();
-                foreach ($result as $row) {
-                    echo json_encode($row) . '<br>';
-                }
+                // foreach ($result as $row) {
+                //     echo json_encode($row) . '<br>';
+                // }
+                return $result;
             }
 
             public static function join($first_table, $second_table) {
@@ -171,10 +174,11 @@
                         array_push($mergedResult, $row);
                     }
                 }
+                return $mergedResult;
 
-                foreach ($mergedResult as $row) {
-                    echo json_encode($row) . '<br>';
-                }
+                // foreach ($mergedResult as $row) {
+                //     echo json_encode($row) . '<br>';
+                // }
             }
 
 

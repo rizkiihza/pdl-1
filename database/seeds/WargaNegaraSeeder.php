@@ -60,5 +60,11 @@ class WargaNegaraSeeder extends Seeder
             'valid_start' => DateTime::createFromFormat('j-M-Y', '17-May-2007'),
             'valid_end' => DateTime::createFromFormat('j-M-Y', '10-Apr-2012')
         ]);
+        DB::table('warga_negaras')->insert([
+            'name' => 'Barrack Obama',
+            'country' => 'USA',
+            'valid_start' => DateTime::createFromFormat('j-M-Y', '17-May-1960'),
+            'valid_end' => DateTime::createFromFormat('j-M-Y', '10-Apr-2018')
+        ]);
     }
 }

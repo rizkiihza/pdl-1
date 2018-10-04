@@ -17,9 +17,9 @@ class CreatePresidensTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('country');
+            $table->boolean('is_deleted')->default(false);
             $table->dateTime('valid_start');
             $table->dateTime('valid_end');
-            $table->boolean('is_deleted')->default(false);
         });
     }
 
