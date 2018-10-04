@@ -51,8 +51,16 @@
 
             public static function insert($value, $table) {
                 $raw_value = substr($value, 1, strlen($value)-2);
-                // get all the attribute from table
+                
                 $inserted_value = explode(',', $raw_value);
+
+                // check inserted valid time
+                if (strtotime($inserted_value[sizeof($inserted_value)-1]) < strtotime($inserted_value[sizeof($inserted_value)-2])) {
+                    echo "Error: Wrong valid time!";
+                    return;
+                }
+
+                // get all the attribute from table
                 $idx = 0; $where_array = [];
                 $first_item = DB::table($table)->first();
                 foreach($first_item as $key=>$value) {
