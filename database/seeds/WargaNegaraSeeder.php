@@ -31,7 +31,25 @@ class WargaNegaraSeeder extends Seeder
             'valid_end' => DateTime::createFromFormat('j-M-Y', '10-Aug-1979')
         ]);
         DB::table('warga_negaras')->insert([
-            'name' => 'Anton',
+            'name' => 'Soekarno',
+            'country' => 'Indonesia',
+            'valid_start' => DateTime::createFromFormat('j-M-Y', '19-Jun-1901'),
+            'valid_end' => DateTime::createFromFormat('j-M-Y', '21-Jun-1970')
+        ]);
+        DB::table('warga_negaras')->insert([
+            'name' => 'Soeharto',
+            'country' => 'Indonesia',
+            'valid_start' => DateTime::createFromFormat('j-M-Y', '8-Jun-1921'),
+            'valid_end' => DateTime::createFromFormat('j-M-Y', '27-Jan-2008')
+        ]);
+        DB::table('warga_negaras')->insert([
+            'name' => "Susilo Bambang Yudhoyono",
+            'country' => "Indonesia",
+            'valid_start' => DateTime::createFromFormat('j-M-Y', '9-Sep-1949'),
+            'valid_end' => DateTime::createFromFormat('j-M-Y', '10-Oct-2018'),
+        ]);
+        DB::table('warga_negaras')->insert([
+            'name' => 'Anton',  
             'country' => 'USA',
             'valid_start' => DateTime::createFromFormat('j-M-Y', '24-Jan-1950'),
             'valid_end' => DateTime::createFromFormat('j-M-Y', '30-Apr-1980')
@@ -65,6 +83,25 @@ class WargaNegaraSeeder extends Seeder
             'country' => 'USA',
             'valid_start' => DateTime::createFromFormat('j-M-Y', '17-May-1960'),
             'valid_end' => DateTime::createFromFormat('j-M-Y', '10-Apr-2018')
+        ]);
+        DB::table('warga_negaras')->insert([
+            'name' => "George Bush",
+            'country' => "USA",
+            'valid_start' => DateTime::createFromFormat('j-M-Y', '6-Jul-1946'),
+            'valid_end' => DateTime::createFromFormat('j-M-Y', '10-Oct-2018'),
+        ]);
+        DB::table('warga_negaras')->insert([
+            'name' => "Francois Hollande",
+            'country' => "France",
+            'valid_start' => DateTime::createFromFormat('j-M-Y', '12-Aug-1954'),
+            'valid_end' => DateTime::createFromFormat('j-M-Y', '10-Oct-2018'),
+        ]);
+
+        DB::table('warga_negaras')->insert([
+            'name' => "Nicolas Sarkozy",
+            'country' => "France",
+            'valid_start' => DateTime::createFromFormat('j-M-Y', '28-Jan-1955'),
+            'valid_end' => DateTime::createFromFormat('j-M-Y', '15-May-2017'),
         ]);
     }
 }

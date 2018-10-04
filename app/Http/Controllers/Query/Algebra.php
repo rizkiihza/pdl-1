@@ -196,6 +196,46 @@
                 }
             }
 
+            public static function setDifference($table1, $table2) {
+                $result1 = DB::table($table1)->get();
+                $result2 = DB::table($table2)->get();
+
+                $differenceResult = array();
+                $length = count($result2);
+                foreach ($result1 as $row1) {
+                    $idx = 0;
+                    $found = False;
+                    while (!$found && $idx < $length) {
+                        if ($row1->name == $result2[$idx]->name && 
+                            $row1->country == $result2[$idx]->country) {
+                            $found = True;
+                        } else {
+                            $idx++;
+                        }
+                    }
+                    if (!$found) {
+                        array_push($differenceResult, $row1);
+                    } else {
+                        // count the remaining valid time
+                        $start1 = date($row1->valid_start);
+                        $start2 = date($result2[$idx]->valid_start);
+                        $end1 = date($row1->valid_end);
+                        $end2 = date($result2[$idx]->valid_end);
+                        if ($start1 < $start2 && $start2 < $end1) {
+                            $remainderData1 = clone($row1);
+                            $remainderData1->valid_end = $start2;
+                            array_push($differenceResult, $remainderData1);
+                        }
+                        if ($start1 < $end2 && $end1 > $end2) {
+                            $remainderData2 = clone($row1);
+                            $remainderData2->valid_start = $end2;
+                            array_push($differenceResult, $remainderData2);
+                        }
+                    }
+                }
+                return $differenceResult;
+            }
+
             // helper function
             public static function reformatDate($raw_date) {
                 $date = new DateTime($raw_date);

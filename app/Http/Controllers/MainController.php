@@ -89,6 +89,21 @@ class MainController extends Controller
             $this->makeTable($result);
         }
 
+        else if ($query_pieces[0] === "diff") {
+            $first_table = $query_pieces[1];
+            $second_table = $query_pieces[2];
+            $result = Algebra::setDifference($first_table, $second_table);
+            foreach ($result as $idx => $rawdataitem) {
+                foreach ($rawdataitem as $key => $value) {
+                    if ($key == 'validStart' || $key == 'validEnd') {
+                        $value = Algebra::reformatDate($value);
+                    }
+                    $result[$idx]->$key = $value;
+                }
+            }
+            $this->makeTable($result);
+        }
+
         else if ($query_pieces[0] === "insert") {
             // example : insert (8, Joko Widodo, Indonesia, 2014-08-17, 2019-08-17) presidens
 

@@ -48,6 +48,11 @@
                 example: join presidens warga_negaras</p>
                 <br>
 
+                <h6>Set Difference</h6>
+                <p>diff [first_table] [second_table]<br>
+                example: diff warga_negaras presidens</p>
+                <br>
+
                 <h6>Delete</h6>
                 <p>delete [table] [where_statement]<br>
                 example: delete presidens name='Sukarno'&country='Indonesia'</p>
