@@ -90,10 +90,12 @@ class MainController extends Controller
             $id1 = $query_pieces[3];
             $id2 = $query_pieces[4];
 
-            if ($allen == "before") {
-                $result = Allen::before($table, $id1, $id2);
-                echo "\n\n"  .  $result;
-            }
+            // if ($allen == "before") {
+            //     $result = Allen::before($table, $id1, $id2);
+            //     echo "\n\n"  .  $result;
+            // }
+            $result = Allen::$allen($table, $id1, $id2);
+            var_dump($result);
         }
     }
 
