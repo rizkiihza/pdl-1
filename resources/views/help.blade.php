@@ -53,6 +53,11 @@
                 example: diff warga_negaras presidens</p>
                 <br>
 
+                <h6>Union</h6>
+                <p>union [column] [first_table] [second_table]<br>
+                example: union * warga_negaras presidens</p>
+                <br>
+
                 <h6>Delete</h6>
                 <p>delete [table] [where_statement]<br>
                 example: delete presidens name='Sukarno'&country='Indonesia'</p>
