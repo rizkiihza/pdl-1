@@ -86,6 +86,7 @@
                     ->select("id")
                     ->whereRaw($where_array_text)
                     ->whereRaw("((valid_start BETWEEN '$valid_start' AND '$valid_end') OR (valid_end BETWEEN '$valid_start' AND '$valid_end'))")
+                    ->where('is_deleted', '=', FALSE)
                     ->count();
                 if ($conflicted_value > 0) {
                     echo "Error: Duplicate item with overlapping valid time!";
@@ -110,22 +111,19 @@
                 $result = DB::table($table)->
                     where('valid_start', '<=', $date)->
                     where('valid_end', '>=', $date)->
+                    where('is_deleted', '=', FALSE)->
                     get();
 
                 return $result;
-                // foreach ($result as $row) {
-                //     echo json_encode($row) . '<br>';
-                // }
             }
 
             public static function select($table, $where) {
                 $sql_where = str_replace("&", " AND ", $where);
                 $result = DB::table($table)
                         ->whereRaw($sql_where)
+                        ->where('is_deleted', '=', FALSE)
                         ->get();
-                // foreach ($result as $row) {
-                //     echo json_encode($row) . '<br>';
-                // }
+                
                 return $result;
             }
 
